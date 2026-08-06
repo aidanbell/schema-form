@@ -22,7 +22,7 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "echo \"Tests not configured yet\" && exit 1"
+    "test": "vitest run --config ../../vitest.config.ts"
   },
   "peerDependencies": {
     "@hookform/resolvers": ">=3.0.0",

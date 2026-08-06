@@ -2,6 +2,7 @@
   "name": "schema-form-monorepo",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "description": "Schema in → accessible React form out",
   "packageManager": "pnpm@9.11.0",
   "engines": {
@@ -9,7 +10,25 @@
   },
   "scripts": {
     "build": "pnpm -r run build",
-    "test": "pnpm -r run test",
-    "typecheck": "pnpm -r run typecheck"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "changeset": "changeset",
+    "verify": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.12",
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "globals": "^15.14.0",
+    "prettier": "^3.5.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.0.5"
   }
 }
