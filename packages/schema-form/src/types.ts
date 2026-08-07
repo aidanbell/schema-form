@@ -5,14 +5,7 @@
  * const type: FieldType = "email";
  */
 export type FieldType =
-  | "string"
-  | "email"
-  | "password"
-  | "number"
-  | "boolean"
-  | "select"
-  | "radio"
-  | "textarea";
+  "string" | "email" | "password" | "number" | "boolean" | "select" | "radio" | "textarea";
 
 /**
  * A single form field definition.
@@ -80,6 +73,16 @@ export type ParseResult<T> =
   | { success: true; data: T; warnings?: ParseIssue[] }
   | { success: false; error: string; issues?: ParseIssue[] };
 
+/**
+ * Result of parsing a field definition.
+ *
+ * @example
+ * const fieldResult: ParseFieldResult<FieldDefinition> = parseField(input);
+ */
+export type ParseFieldResult =
+  | { success: true; data: FieldDefinition; warnings?: ParseIssue[] }
+  | { success: false; issues?: ParseIssue[] };
+
 export const FIELD_TYPES: readonly FieldType[] = [
   "string",
   "email",
@@ -93,12 +96,7 @@ export const FIELD_TYPES: readonly FieldType[] = [
 
 export const FIELD_NAME_PATTERN = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
 
-export const FORM_DEFINITION_KEYS = new Set([
-  "schemaVersion",
-  "title",
-  "description",
-  "fields",
-]);
+export const FORM_DEFINITION_KEYS = new Set(["schemaVersion", "title", "description", "fields"]);
 
 export const FIELD_DEFINITION_KEYS = new Set([
   "name",
