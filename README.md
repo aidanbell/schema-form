@@ -4,25 +4,25 @@
 
 **Schema in → accessible React form out.**
 
-Pass a small JSON config (field list + rules). The library validates the schema, builds a Zod validator, and either:
+Pass a small JSON config (field list + rules). The library validates the schema, builds a Valibot validator, and either:
 
 - renders a polished Tailwind/Radix form (`@aidanbell/schema-form-ui`), or
 - exposes headless hooks/utils so you bring your own components (`@aidanbell/schema-form`)
 
 ## Packages
 
-| Package | Role |
-|---------|------|
-| `@aidanbell/schema-form` | Headless core: parse, defaults, Zod schema, `useSchemaForm` |
-| `@aidanbell/schema-form-ui` | Styled `SchemaForm` component (coming soon) |
+| Package                     | Role                                                            |
+| --------------------------- | --------------------------------------------------------------- |
+| `@aidanbell/schema-form`    | Headless core: parse, defaults, Valibot schema, `useSchemaForm` |
+| `@aidanbell/schema-form-ui` | Styled `SchemaForm` component (coming soon)                     |
 
 ## Install (core)
 
 ```bash
-pnpm add @aidanbell/schema-form zod react react-dom react-hook-form @hookform/resolvers
+pnpm add @aidanbell/schema-form valibot react react-dom react-hook-form @hookform/resolvers
 ```
 
-**Peer dependencies (core):** `react` / `react-dom` ≥18.2, `zod` ^3.23 (Zod 3 officially supported in CI; `^4` accepted in the peer range), plus `react-hook-form` and `@hookform/resolvers` for the headless hook.
+**Peer dependencies (core):** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, plus `react-hook-form` and `@hookform/resolvers` for the headless hook.
 
 ## Empty-value semantics
 
