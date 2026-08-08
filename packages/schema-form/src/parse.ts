@@ -125,9 +125,7 @@ const parseField = (field: unknown, index: number): ParseFieldResult => {
   if (!isString(name) || name.length === 0) {
     issues.push(issue(`fields[${index}].name`, "Field must have a name"));
   } else if (isString(name) && !FIELD_NAME_PATTERN.test(name)) {
-    issues.push(
-      issue(`fields[${index}].name`, "Invalid field name (cannot contain special characters)"),
-    );
+    issues.push(issue(`fields[${index}].name`, `Invalid field name "${name}"`));
   } else {
     parsedName = name;
   }
@@ -136,7 +134,7 @@ const parseField = (field: unknown, index: number): ParseFieldResult => {
   if (!isString(type) || type.length === 0) {
     issues.push(issue(`fields[${index}].type`, "Field must have a type"));
   } else if (!isFieldType(type)) {
-    issues.push(issue(`fields[${index}].type`, "Invalid field type"));
+    issues.push(issue(`fields[${index}].type`, `Unknown field type "${type}"`));
   } else {
     parsedType = type;
   }
