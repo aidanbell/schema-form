@@ -59,7 +59,7 @@ function buildTextSchema(field: FieldDefinition) {
 function buildNumberSchema(field: FieldDefinition) {
   return v.pipe(
     v.union([v.number(), v.literal("")]),
-    v.check((value) => !(field.required || value === ""), "Required"),
+    v.check((value) => !(field.required === true && value === ""), "Required"),
     v.check(
       (value) => value === "" || field.min === undefined || value >= field.min,
       `Must be at least ${field.min}`,
