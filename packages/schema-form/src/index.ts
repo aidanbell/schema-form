@@ -4,6 +4,7 @@
  */
 export { parseFormDefinition } from "./parse.js";
 export { formatParseError } from "./errors.js";
+export { buildFormValidationSchema } from "./validation.js";
 export type {
   FieldDefinition,
   FieldType,
