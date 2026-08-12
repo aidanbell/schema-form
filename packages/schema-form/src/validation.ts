@@ -35,16 +35,32 @@ function buildTextSchema(field: FieldDefinition) {
     steps.push(v.nonEmpty("Required"));
   }
   if (field.type === "email") {
-    steps.push(v.email("Invalid email"));
+    steps.push(
+      v.check(
+        (value) => value === "" || v.safeParse(v.pipe(v.string(), v.email()), value).success,
+        "Invalid Email",
+      ),
+    );
   }
   if (field.minLength !== undefined) {
-    steps.push(v.minLength(field.minLength, `Must be at least ${field.minLength} characters`));
+    steps.push(
+      v.check(
+        (value) => value === "" || value.length >= field.minLength!,
+        `Must be at least ${field.minLength} characters`,
+      ),
+    );
   }
   if (field.maxLength !== undefined) {
-    steps.push(v.maxLength(field.maxLength, `Must be at most ${field.maxLength} characters`));
+    steps.push(
+      v.check(
+        (value) => value === "" || value.length >= field.maxLength!,
+        `Must be at most ${field.maxLength} characters`,
+      ),
+    );
   }
   if (field.pattern) {
-    steps.push(v.regex(new RegExp(field.pattern), "Invalid format"));
+    const re = new RegExp(field.pattern);
+    steps.push(v.check((value) => value === "" || re.test(value), "Invalid format"));
   }
 
   const constrained = steps.length > 0 ? v.pipe(v.string(), ...steps) : v.string();
