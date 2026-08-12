@@ -38,7 +38,7 @@ function buildTextSchema(field: FieldDefinition) {
     steps.push(
       v.check(
         (value) => value === "" || v.safeParse(v.pipe(v.string(), v.email()), value).success,
-        "Invalid Email",
+        "Invalid email",
       ),
     );
   }
@@ -53,7 +53,7 @@ function buildTextSchema(field: FieldDefinition) {
   if (field.maxLength !== undefined) {
     steps.push(
       v.check(
-        (value) => value === "" || value.length >= field.maxLength!,
+        (value) => value === "" || value.length <= field.maxLength!,
         `Must be at most ${field.maxLength} characters`,
       ),
     );
