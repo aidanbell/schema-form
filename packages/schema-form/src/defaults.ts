@@ -1,4 +1,4 @@
-import type { FieldDefinition } from "./types";
+import type { FieldDefinition } from "./types.js";
 
 function defaultForType(field: FieldDefinition): unknown {
   if (field.defaultValue !== undefined) {

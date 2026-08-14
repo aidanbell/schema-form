@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import * as v from "valibot";
-import { buildFormValidationSchema } from "../src/index";
+import { buildFormValidationSchema } from "../src/index.js";
 
 const schema = buildFormValidationSchema([
   { name: "email", type: "email", required: true },

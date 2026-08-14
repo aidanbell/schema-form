@@ -4,7 +4,8 @@
  */
 export { parseFormDefinition } from "./parse.js";
 export { formatParseError } from "./errors.js";
-export type { buildFormValidationSchema, FormValidationSchema } from "./validation.js";
+export { buildFormValidationSchema } from "./validation.js";
+export type { FormValidationSchema } from "./validation.js";
 export { getDefaultValues } from "./defaults.js";
 export { useSchemaForm } from "./useSchemaForm.js";
 export type {

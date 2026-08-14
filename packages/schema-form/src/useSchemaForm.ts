@@ -1,9 +1,10 @@
 import { useMemo } from "react";
-import { UseSchemaFormOptions, UseSchemaFormResult } from "./types.js";
 import { useForm } from "react-hook-form";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-import { buildFormValidationSchema, type FormValidationSchema } from "./validation.js";
 import { getDefaultValues } from "./defaults.js";
+import type { UseSchemaFormOptions, UseSchemaFormResult } from "./types.js";
+import { buildFormValidationSchema } from "./validation.js";
+import type { FormValidationSchema } from "./validation.js";
 
 export function useSchemaForm(options: UseSchemaFormOptions): UseSchemaFormResult {
   const { definition, defaultValues, onSubmit } = options;

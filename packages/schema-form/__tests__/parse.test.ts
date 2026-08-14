@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseFormDefinition } from "../src/index";
-import { issue } from "../src/errors";
+import { parseFormDefinition } from "../src/index.js";
+import { issue } from "../src/errors.js";
 
 const goldenSignup = {
   schemaVersion: 1 as const,

@@ -1,6 +1,6 @@
-import { UseFormReturn } from "react-hook-form";
-import { BaseSyntheticEvent } from "react";
-import type { FormValidationSchema } from "./validation.ts";
+import type { BaseSyntheticEvent } from "react";
+import type { UseFormReturn } from "react-hook-form";
+import type { FormValidationSchema } from "./validation.js";
 
 /**
  * Supported field types for `schemaVersion: 1`.

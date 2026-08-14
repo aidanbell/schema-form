@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatParseError, issue } from "../src/errors";
+import { formatParseError, issue } from "../src/errors.js";
 
 describe("formatParseError", () => {
   it("should produce a fallback error message when no issues are provided", () => {
