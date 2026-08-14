@@ -11,16 +11,17 @@ pnpm install
 
 ## Scripts
 
-| Command           | Description                         |
-| ----------------- | ----------------------------------- |
-| `pnpm build`      | Build packages with tsup            |
-| `pnpm test`       | Run Vitest once                     |
-| `pnpm test:watch` | Vitest watch mode                   |
-| `pnpm typecheck`  | TypeScript project checks           |
-| `pnpm lint`       | ESLint                              |
-| `pnpm format`     | Prettier write                      |
-| `pnpm verify`     | Typecheck + test + build (local CI) |
-| `pnpm changeset`  | Add a changeset for release         |
+| Command              | Description                          |
+| -------------------- | ------------------------------------ |
+| `pnpm build`         | Build packages with tsup             |
+| `pnpm test`          | Run Vitest once                      |
+| `pnpm test:watch`    | Vitest watch mode                    |
+| `pnpm test:coverage` | Vitest with coverage (≥90% core)     |
+| `pnpm typecheck`     | TypeScript project checks            |
+| `pnpm lint`          | ESLint                               |
+| `pnpm format`        | Prettier write                       |
+| `pnpm verify`        | Typecheck + lint + test + build      |
+| `pnpm changeset`     | Add a changeset for release          |
 
 ## Packages
 

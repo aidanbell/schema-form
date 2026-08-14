@@ -24,11 +24,15 @@ pnpm add @aidanbell/schema-form valibot react react-dom react-hook-form @hookfor
 
 **Peer dependencies (core):** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, plus `react-hook-form` and `@hookform/resolvers` for the headless hook.
 
+Package docs: [`packages/schema-form/README.md`](packages/schema-form/README.md)
+
 ## Empty-value semantics
 
 - Optional text-like fields (`string`, `email`, `password`, `textarea`, `select`, `radio`) submit empty values as `''`.
 - Optional `number` fields submit empty input as `undefined` (never coerced to `0`).
 - `boolean` fields default to `false` when unchecked / unset; a required boolean must be `true`.
+
+Full schema contract: [`SCHEMA.md`](SCHEMA.md). Stability notes: [`MIGRATION.md`](MIGRATION.md).
 
 ## License
 
