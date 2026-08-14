@@ -14,7 +14,7 @@ Pass a small JSON config (field list + rules). The library validates the schema,
 | Package                     | Role                                                            |
 | --------------------------- | --------------------------------------------------------------- |
 | `@aidanbell/schema-form`    | Headless core: parse, defaults, Valibot schema, `useSchemaForm` |
-| `@aidanbell/schema-form-ui` | Styled `SchemaForm` component (coming soon)                     |
+| `@aidanbell/schema-form-ui` | Styled `SchemaForm` component (scaffolded)                      |
 
 ## Install (core)
 
@@ -24,7 +24,10 @@ pnpm add @aidanbell/schema-form valibot react react-dom react-hook-form @hookfor
 
 **Peer dependencies (core):** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, plus `react-hook-form` and `@hookform/resolvers` for the headless hook.
 
-Package docs: [`packages/schema-form/README.md`](packages/schema-form/README.md)
+Package docs:
+
+- [`packages/schema-form/README.md`](packages/schema-form/README.md)
+- [`packages/schema-form-ui/README.md`](packages/schema-form-ui/README.md)
 
 ## Empty-value semantics
 

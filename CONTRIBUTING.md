@@ -11,22 +11,22 @@ pnpm install
 
 ## Scripts
 
-| Command              | Description                          |
-| -------------------- | ------------------------------------ |
-| `pnpm build`         | Build packages with tsup             |
-| `pnpm test`          | Run Vitest once                      |
-| `pnpm test:watch`    | Vitest watch mode                    |
-| `pnpm test:coverage` | Vitest with coverage (≥90% core)     |
-| `pnpm typecheck`     | TypeScript project checks            |
-| `pnpm lint`          | ESLint                               |
-| `pnpm format`        | Prettier write                       |
-| `pnpm verify`        | Typecheck + lint + test + build      |
-| `pnpm changeset`     | Add a changeset for release          |
+| Command              | Description                      |
+| -------------------- | -------------------------------- |
+| `pnpm build`         | Build packages with tsup         |
+| `pnpm test`          | Run Vitest once                  |
+| `pnpm test:watch`    | Vitest watch mode                |
+| `pnpm test:coverage` | Vitest with coverage (≥90% core) |
+| `pnpm typecheck`     | TypeScript project checks        |
+| `pnpm lint`          | ESLint                           |
+| `pnpm format`        | Prettier write                   |
+| `pnpm verify`        | Typecheck + lint + test + build  |
+| `pnpm changeset`     | Add a changeset for release      |
 
 ## Packages
 
 - `@aidanbell/schema-form` — headless core (parse, Valibot builder, `useSchemaForm`)
-- `@aidanbell/schema-form-ui` — styled React form (not started yet)
+- `@aidanbell/schema-form-ui` — styled React form (scaffolded)
 
 ## Pull requests
 
