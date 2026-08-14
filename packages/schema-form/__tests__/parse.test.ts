@@ -194,6 +194,90 @@ describe("parseFormDefinition", () => {
         issue("fields[0].minLength", "minLength must be less or equal to maxLength"),
       );
     });
+
+    it("should reject non-string title and description", () => {
+      const result = parseFormDefinition({
+        title: 1,
+        description: false,
+        fields: [{ name: "email", type: "email" }],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(issue("title", "Title must be a string"));
+      expect(result.issues).toContainEqual(issue("description", "Description must be a string"));
+    });
+
+    it("should reject a non-object field entry", () => {
+      const result = parseFormDefinition({
+        fields: ["nope"],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(issue("fields[0]", "Field must be an object"));
+    });
+
+    it("should reject missing name and type", () => {
+      const result = parseFormDefinition({
+        fields: [{}],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(issue("fields[0].name", "Field must have a name"));
+      expect(result.issues).toContainEqual(issue("fields[0].type", "Field must have a type"));
+    });
+
+    it("should reject invalid defaultValue and option types", () => {
+      const result = parseFormDefinition({
+        fields: [
+          {
+            name: "role",
+            type: "select",
+            defaultValue: { x: 1 },
+            options: ["ok", 2],
+          },
+        ],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(
+        issue("fields[0].defaultValue", "DefaultValue must be a string, number, or boolean"),
+      );
+      expect(result.issues).toContainEqual(
+        issue("fields[0].options[1]", "Option must be a string"),
+      );
+    });
+
+    it("should reject empty options arrays", () => {
+      const result = parseFormDefinition({
+        fields: [{ name: "role", type: "radio", options: [] }],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(
+        issue("fields[0].options", "Options must have at least one value"),
+      );
+    });
+
+    it("should reject wrong types for optional field props", () => {
+      const result = parseFormDefinition({
+        fields: [
+          {
+            name: "age",
+            type: "number",
+            label: 1,
+            required: "yes",
+            min: "1",
+            disabled: "no",
+          },
+        ],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(issue("fields[0].label", "Value must be a string"));
+      expect(result.issues).toContainEqual(issue("fields[0].required", "Value must be a boolean"));
+      expect(result.issues).toContainEqual(issue("fields[0].min", "Value must be a number"));
+      expect(result.issues).toContainEqual(issue("fields[0].disabled", "Value must be a boolean"));
+    });
   });
 
   describe("warnings", () => {
@@ -211,6 +295,19 @@ describe("parseFormDefinition", () => {
       );
       expect(result.warnings).toContainEqual(issue("date", 'Unknown key "date" was stripped'));
       expect(Object.keys(result.data)).toEqual(["schemaVersion", "fields", "title", "description"]);
+    });
+
+    it("should strip unknown field keys with warnings", () => {
+      const result = parseFormDefinition({
+        fields: [{ name: "email", type: "email", extra: true, defaultValue: "a@b.com" }],
+      });
+      expect(result.success).toBe(true);
+      if (!result.success) return;
+      expect(result.data.fields[0]?.defaultValue).toBe("a@b.com");
+      expect(result.warnings).toContainEqual(
+        issue("fields[0].extra", 'Unknown key "extra" was stripped'),
+      );
+      expect(result.data.fields[0]).not.toHaveProperty("extra");
     });
   });
 });

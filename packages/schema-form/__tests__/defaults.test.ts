@@ -9,12 +9,20 @@ describe("getDefaultValues", () => {
         { name: "age", type: "number" },
         { name: "agree", type: "boolean" },
         { name: "email", type: "email" },
+        { name: "password", type: "password" },
+        { name: "bio", type: "textarea" },
+        { name: "role", type: "select", options: ["a"] },
+        { name: "plan", type: "radio", options: ["b"] },
       ]),
     ).toEqual({
       name: "abcd",
       age: undefined,
       agree: false,
       email: "",
+      password: "",
+      bio: "",
+      role: "",
+      plan: "",
     });
   });
 });

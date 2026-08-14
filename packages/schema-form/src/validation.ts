@@ -76,7 +76,7 @@ function buildNumberSchema(field: FieldDefinition) {
   return v.pipe(
     v.union([v.number(), v.literal(""), v.undefined()]),
     v.check(
-      (value) => !(field.required === true && value === "" && value === undefined),
+      (value) => !(field.required === true && (value === "" || value === undefined)),
       "Required",
     ),
     v.check(
