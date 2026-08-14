@@ -1,3 +1,7 @@
+import { UseFormReturn } from "react-hook-form";
+import { BaseSyntheticEvent } from "react";
+import type { FormValidationSchema } from "./validation.ts";
+
 /**
  * Supported field types for `schemaVersion: 1`.
  *
@@ -82,6 +86,44 @@ export type ParseResult<T> =
 export type ParseFieldResult =
   | { success: true; data: FieldDefinition; warnings?: ParseIssue[] }
   | { success: false; issues?: ParseIssue[] };
+
+/**
+ * Options for the useSchemaForm hook.
+ *
+ * @example
+ * const opts: UseSchemaFormOptions = {
+ *   definition: {
+ *     schemaVersion: 1,
+ *     title: "Invite",
+ *     fields: [{ name: "email", type: "email", required: true }],
+ *   },
+ *   defaultValues: {
+ *     name: "John Doe",
+ *     email: "john.doe@example.com",
+ *   },
+ *   onSubmit: (data) => {
+ *     console.log(data);
+ *   },
+ * }
+ */
+export type UseSchemaFormOptions = {
+  definition: FormDefinition;
+  defaultValues?: Record<string, unknown>;
+  onSubmit?: (values: Record<string, unknown>) => void | Promise<void>;
+};
+
+/**
+ * Result of the useSchemaForm hook.
+ *
+ * @example
+ * const result: UseSchemaFormResult = useSchemaForm(opts);
+ */
+export type UseSchemaFormResult = {
+  fields: FieldDefinition[];
+  form: UseFormReturn<Record<string, unknown>>;
+  handleSubmit: (e?: BaseSyntheticEvent) => Promise<void>;
+  validationSchema: FormValidationSchema;
+};
 
 export const FIELD_TYPES: readonly FieldType[] = [
   "string",

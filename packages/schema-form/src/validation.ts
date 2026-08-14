@@ -1,9 +1,9 @@
 import * as v from "valibot";
 import type { FieldDefinition } from "./types.js";
 
-type AnySchema = v.GenericSchema;
+export type FormValidationSchema = v.GenericSchema;
 
-function buildFieldSchema(field: FieldDefinition): AnySchema {
+function buildFieldSchema(field: FieldDefinition): FormValidationSchema {
   switch (field.type) {
     case "string":
     case "password":
@@ -20,8 +20,8 @@ function buildFieldSchema(field: FieldDefinition): AnySchema {
   }
 }
 
-export function buildFormValidationSchema(fields: FieldDefinition[]): AnySchema {
-  const shape: Record<string, AnySchema> = {};
+export function buildFormValidationSchema(fields: FieldDefinition[]): FormValidationSchema {
+  const shape: Record<string, FormValidationSchema> = {};
   for (const field of fields) {
     shape[field.name] = buildFieldSchema(field);
   }
@@ -74,14 +74,19 @@ function buildTextSchema(field: FieldDefinition) {
 
 function buildNumberSchema(field: FieldDefinition) {
   return v.pipe(
-    v.union([v.number(), v.literal("")]),
-    v.check((value) => !(field.required === true && value === ""), "Required"),
+    v.union([v.number(), v.literal(""), v.undefined()]),
     v.check(
-      (value) => value === "" || field.min === undefined || value >= field.min,
+      (value) => !(field.required === true && value === "" && value === undefined),
+      "Required",
+    ),
+    v.check(
+      (value) =>
+        value === "" || value === undefined || field.min === undefined || value >= field.min,
       `Must be at least ${field.min}`,
     ),
     v.check(
-      (value) => value === "" || field.max === undefined || value <= field.max,
+      (value) =>
+        value === "" || value === undefined || field.max === undefined || value <= field.max,
       `Must be at most ${field.max}`,
     ),
     v.transform((value) => (value === "" ? undefined : value)),
