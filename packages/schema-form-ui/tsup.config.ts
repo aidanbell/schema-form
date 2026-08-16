@@ -15,5 +15,6 @@ export default defineConfig({
     "valibot",
     "react-hook-form",
     "@hookform/resolvers",
+    "@base-ui/react",
   ],
 });
