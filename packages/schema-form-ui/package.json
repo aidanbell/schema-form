@@ -48,5 +48,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.6.0"
   }
 }
