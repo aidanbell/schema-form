@@ -10,6 +10,8 @@ type CheckboxProps = {
   id?: string;
   name?: string;
   className?: string;
+  "aria-invalid"?: boolean;
+  "aria-describedby"?: string;
 };
 
 export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Checkbox(
