@@ -1,4 +1,5 @@
 export { cn, mergeClassNames } from "./classNames.js";
-export type { SchemaFormClassNames } from "./types.js";
+export { SchemaForm } from "./SchemaForm.js";
+export type { SchemaFormClassNames, SchemaFormConfig, SchemaFormProps } from "./types.js";
 export * from "./fields/index.js";
 export * from "./ui/index.js";
