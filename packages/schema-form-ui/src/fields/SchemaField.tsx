@@ -3,7 +3,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import type { SchemaFormClassNames } from "../types";
 import { cn } from "../classNames.js";
-import { Checkbox, Input, Select, Textarea } from "../ui/index.js";
+import { Checkbox, Input, Select, Textarea, Label } from "../ui/index.js";
 
 type SchemaFieldProps = {
   field: FieldDefinition;
@@ -169,9 +169,9 @@ export function SchemaField({ field, form, classNames, disabled }: SchemaFieldPr
 
   return (
     <div className={cn("space-y-1", classNames?.field)}>
-      <label htmlFor={id} className={cn("text-sm font-medium", classNames?.label)}>
+      <Label htmlFor={id} className={cn("text-sm font-medium", classNames?.label)}>
         {labelContent}
-      </label>
+      </Label>
       {description}
       {control}
       {errorMessage}

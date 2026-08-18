@@ -21,7 +21,6 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Ch
   return (
     <BaseCheckbox.Root
       ref={ref}
-      nativeButton
       className={cn(
         "flex size-4 shrink-0 items-center justify-center rounded-sm border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-950",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
@@ -29,6 +28,8 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(function Ch
         className,
       )}
       {...props}
+      nativeButton
+      render={<button type="button" />}
     >
       <BaseCheckbox.Indicator className="flex text-white dark:text-zinc-900">
         ✓

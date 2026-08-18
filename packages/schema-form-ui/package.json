@@ -36,6 +36,7 @@
     "@aidanbell/schema-form": "workspace:*",
     "@hookform/resolvers": "^5.7.1",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.5",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "happy-dom": "^20.11.2",
