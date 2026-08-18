@@ -6,7 +6,7 @@
 
 Pass a small JSON config (field list + rules). The library validates the schema, builds a Valibot validator, and either:
 
-- renders a polished Tailwind/Radix form (`@aidanbell/schema-form-ui`), or
+- renders a polished Tailwind / Base UI form (`@aidanbell/schema-form-ui`), or
 - exposes headless hooks/utils so you bring your own components (`@aidanbell/schema-form`)
 
 ## Packages
@@ -14,7 +14,7 @@ Pass a small JSON config (field list + rules). The library validates the schema,
 | Package                     | Role                                                            |
 | --------------------------- | --------------------------------------------------------------- |
 | `@aidanbell/schema-form`    | Headless core: parse, defaults, Valibot schema, `useSchemaForm` |
-| `@aidanbell/schema-form-ui` | Styled `SchemaForm` component (scaffolded)                      |
+| `@aidanbell/schema-form-ui` | Styled `SchemaForm` (Tailwind utilities + Base UI checkbox)     |
 
 ## Install (core)
 
@@ -23,6 +23,14 @@ pnpm add @aidanbell/schema-form valibot react react-dom react-hook-form @hookfor
 ```
 
 **Peer dependencies (core):** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, plus `react-hook-form` and `@hookform/resolvers` for the headless hook.
+
+## Install (UI)
+
+```bash
+pnpm add @aidanbell/schema-form-ui @aidanbell/schema-form valibot react react-dom react-hook-form @hookform/resolvers
+```
+
+Your app must run **Tailwind** and scan the UI package’s `dist` (v4 `@source` or v3 `content`). See the UI README for the exact snippets.
 
 Package docs:
 
