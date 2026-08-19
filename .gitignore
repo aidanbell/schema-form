@@ -9,8 +9,4 @@ coverage
 .env.*
 !.env.example
 
-# Local planning / dev files
-PLANNING.md
-BRIEF.md
 ROADMAP.md
-UI_COURSE.md
