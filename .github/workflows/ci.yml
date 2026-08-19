@@ -24,6 +24,11 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # UI typechecks against @aidanbell/schema-form's published types (dist/*.d.ts).
+      # dist/ is gitignored, so build workspace packages before typecheck.
+      - name: Build
+        run: pnpm build
+
       - name: Typecheck
         run: pnpm typecheck
 
@@ -32,6 +37,3 @@ jobs:
 
       - name: Test
         run: pnpm test:coverage
-
-      - name: Build
-        run: pnpm build
