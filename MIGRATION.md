@@ -7,14 +7,14 @@
 - **Validator:** [Valibot](https://valibot.dev) (peer). There is no Zod adapter yet.
 - **Headless only:** parse, defaults, Valibot schema builder, and `useSchemaForm` (React Hook Form + `@hookform/resolvers/valibot`).
 - **Schema:** `schemaVersion: 1` — see [`SCHEMA.md`](SCHEMA.md).
-- **UI package:** `@aidanbell/schema-form-ui` is not published yet.
+- **UI package:** `@aidanbell/schema-form-ui` ships styled `SchemaForm` (Tailwind utilities + Base UI checkbox). Consumers must configure Tailwind to scan the package `dist` — see the UI README.
 
 ## Future (placeholders)
 
 Expect possible breaking changes around:
 
 - Optional Zod (or other) validation adapters beside Valibot
-- Styled `SchemaForm` UI package and shared classNames API
+- `components` / slots map and richer classNames theming
 - `schemaVersion: 2` field/form shape extensions
 - Stricter TypeScript generics for form values
 
