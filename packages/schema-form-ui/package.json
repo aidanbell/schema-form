@@ -1,6 +1,6 @@
 {
   "name": "@aidanbell/schema-form-ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Styled SchemaForm for @aidanbell/schema-form",
   "license": "MIT",
   "type": "module",
@@ -25,7 +25,7 @@
     "test": "vitest run --config ../../vitest.config.ts"
   },
   "peerDependencies": {
-    "@aidanbell/schema-form": ">=0.1.0",
+    "@aidanbell/schema-form": ">=0.1.1",
     "@hookform/resolvers": ">=3.0.0",
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0",
