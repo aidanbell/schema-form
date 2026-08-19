@@ -11,8 +11,8 @@ describe("getDefaultValues", () => {
         { name: "email", type: "email" },
         { name: "password", type: "password" },
         { name: "bio", type: "textarea" },
-        { name: "role", type: "select", options: ["a"] },
-        { name: "plan", type: "radio", options: ["b"] },
+        { name: "role", type: "select", options: [{ label: "a", value: "a" }] },
+        { name: "plan", type: "radio", options: [{ label: "b", value: "b" }] },
       ]),
     ).toEqual({
       name: "abcd",

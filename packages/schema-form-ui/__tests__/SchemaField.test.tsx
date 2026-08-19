@@ -31,8 +31,19 @@ describe("SchemaField", () => {
   });
 
   it("should render a boolean field", () => {
-    render(<Form field={{ name: "subscribe", type: "boolean", label: "Subscribe" }} />);
+    render(
+      <Form
+        field={{
+          name: "subscribe",
+          type: "boolean",
+          label: "Subscribe",
+          description: "Get product updates",
+        }}
+      />,
+    );
     expect(screen.getByRole("checkbox")).toBeTruthy();
+    expect(screen.getByLabelText(/Subscribe/)).toBeTruthy();
+    expect(screen.getByText(/Get product updates/i)).toBeTruthy();
   });
 
   it("should render a textarea field", () => {
@@ -43,27 +54,47 @@ describe("SchemaField", () => {
 
   it("should render a select field", () => {
     render(
-      <Form field={{ name: "role", type: "select", label: "Role", options: ["admin", "user"] }} />,
+      <Form
+        field={{
+          name: "role",
+          type: "select",
+          label: "Role",
+          options: [
+            { label: "Admin", value: "admin" },
+            { label: "User", value: "user" },
+          ],
+        }}
+      />,
     );
     expect(screen.getByLabelText(/^Role$/)).toBeTruthy();
     expect(screen.getByRole("combobox")).toBeTruthy();
+    expect(screen.getByRole("option", { name: "Admin" })).toBeTruthy();
   });
 
-  it("should render a radio field", () => {
+  it("should render a password field", () => {
+    render(<Form field={{ name: "password", type: "password", label: "Password" }} />);
+    expect(screen.getByLabelText(/^Password$/)).toHaveProperty("type", "password");
+  });
+
+  it("should render a radio field with labels", () => {
     render(
       <Form
         field={{
           name: "dessert",
           type: "radio",
           label: "Dessert",
-          options: ["ice cream", "cake", "cookies"],
+          options: [
+            { label: "Ice cream", value: "ice_cream" },
+            { label: "Cake", value: "cake" },
+            { label: "Cookies", value: "cookies" },
+          ],
         }}
       />,
     );
     expect(screen.getByText(/^Dessert$/)).toBeTruthy();
     expect(screen.getByRole("radiogroup")).toBeTruthy();
     expect(screen.getAllByRole("radio")).toHaveLength(3);
-    expect(screen.getByLabelText(/ice cream/i)).toBeTruthy();
+    expect(screen.getByLabelText(/Ice cream/i)).toBeTruthy();
   });
 
   it("should render a field description", () => {
@@ -82,12 +113,20 @@ describe("SchemaField", () => {
     expect(screen.getByText(/\*/i)).toBeTruthy();
   });
 
-  it("should render a select placeholder", () => {
+  it("should render a select placeholder for required fields", () => {
     render(
       <Form
-        field={{ name: "role", type: "select", label: "Role", placeholder: "Select a role" }}
+        field={{
+          name: "role",
+          type: "select",
+          label: "Role",
+          required: true,
+          options: [{ label: "Admin", value: "admin" }],
+        }}
       />,
     );
-    expect(screen.getByText(/Select a role/i)).toBeTruthy();
+    const placeholder = screen.getByText("Select...");
+    expect(placeholder.tagName).toBe("OPTION");
+    expect(placeholder).toHaveProperty("disabled", true);
   });
 });

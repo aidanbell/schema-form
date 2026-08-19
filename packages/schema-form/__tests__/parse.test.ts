@@ -27,6 +27,31 @@ describe("parseFormDefinition", () => {
       expect(result.data.schemaVersion).toBe(1);
       expect(result.data.fields).toHaveLength(2);
       expect(result.data.title).toBe("Sign up");
+      expect(result.data.fields[1]?.options).toEqual([
+        { label: "admin", value: "admin" },
+        { label: "viewer", value: "viewer" },
+      ]);
+    });
+
+    it("normalizes object options for select/radio", () => {
+      const result = parseFormDefinition({
+        fields: [
+          {
+            name: "dessert",
+            type: "radio",
+            options: [
+              { label: "Ice cream", value: "ice_cream" },
+              { label: "Cake", value: "cake" },
+            ],
+          },
+        ],
+      });
+      expect(result.success).toBe(true);
+      if (!result.success) return;
+      expect(result.data.fields[0]?.options).toEqual([
+        { label: "Ice cream", value: "ice_cream" },
+        { label: "Cake", value: "cake" },
+      ]);
     });
 
     it("parses a JSON string", () => {
@@ -243,7 +268,10 @@ describe("parseFormDefinition", () => {
         issue("fields[0].defaultValue", "DefaultValue must be a string, number, or boolean"),
       );
       expect(result.issues).toContainEqual(
-        issue("fields[0].options[1]", "Option must be a string"),
+        issue(
+          "fields[0].options[1]",
+          "Option must be a string or an object with non-empty label and value",
+        ),
       );
     });
 
@@ -255,6 +283,35 @@ describe("parseFormDefinition", () => {
       if (result.success) return;
       expect(result.issues).toContainEqual(
         issue("fields[0].options", "Options must have at least one value"),
+      );
+    });
+
+    it("should reject empty or incomplete option entries", () => {
+      const result = parseFormDefinition({
+        fields: [
+          {
+            name: "role",
+            type: "select",
+            options: ["", { label: "Admin", value: "" }, { label: 1, value: "x" }],
+          },
+        ],
+      });
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.issues).toContainEqual(
+        issue("fields[0].options[0]", "Option string must be non-empty"),
+      );
+      expect(result.issues).toContainEqual(
+        issue(
+          "fields[0].options[1]",
+          "Option must be a string or an object with non-empty label and value",
+        ),
+      );
+      expect(result.issues).toContainEqual(
+        issue(
+          "fields[0].options[2]",
+          "Option must be a string or an object with non-empty label and value",
+        ),
       );
     });
 

@@ -24,7 +24,7 @@ Unknown top-level keys are stripped during parse (may surface as warnings).
 | `required` | `boolean` | Default `false`. |
 | `placeholder` | `string` | Optional. |
 | `defaultValue` | `string \| number \| boolean` | Used by `getDefaultValues` when set. |
-| `options` | `string[]` | Required (non-empty) for `select` / `radio`. |
+| `options` | `(string \| { label: string; value: string })[]` | Required (non-empty) for `select` / `radio`. Plain strings are normalized to `{ label, value }` with the same text for both. |
 | `min` / `max` | `number` | Number bounds (`min` ≤ `max` when both set). |
 | `minLength` / `maxLength` | `number` | String length bounds. |
 | `pattern` | `string` | RegExp source for text-like fields. |
@@ -44,6 +44,7 @@ Unknown top-level keys are stripped during parse (may surface as warnings).
 - Unknown keys on the form or fields are stripped; warnings may be returned.
 - Duplicate field names are rejected.
 - `select` / `radio` without a non-empty `options` array are rejected.
+- Each option must be a non-empty string or `{ label, value }` with non-empty strings; parsed fields always store `{ label, value }`.
 - Invalid `pattern` strings are rejected.
 - Inconsistent `min`/`max` or `minLength`/`maxLength` are rejected.
 

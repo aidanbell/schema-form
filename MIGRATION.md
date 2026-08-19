@@ -8,6 +8,7 @@
 - **Headless only:** parse, defaults, Valibot schema builder, and `useSchemaForm` (React Hook Form + `@hookform/resolvers/valibot`).
 - **Schema:** `schemaVersion: 1` — see [`SCHEMA.md`](SCHEMA.md).
 - **UI package:** `@aidanbell/schema-form-ui` ships styled `SchemaForm` (Tailwind utilities + Base UI checkbox). Consumers must configure Tailwind to scan the package `dist` — see the UI README.
+- **Select / radio options (0.1.1+):** accept `string` or `{ label, value }`. After parse, options are always `{ label, value }` (a string `"admin"` becomes `{ label: "admin", value: "admin" }`).
 
 ## Future (placeholders)
 

@@ -98,10 +98,12 @@ export function SchemaField({ field, form, classNames, disabled }: SchemaFieldPr
           aria-describedby={describedBy}
           {...form.register(field.name)}
         >
-          {!field.required && <option value="">{field.placeholder ?? "Select..."}</option>}
+          <option value="" disabled hidden>
+            {field.placeholder ?? "Select..."}
+          </option>
           {field.options?.map((option) => (
-            <option key={option} value={option}>
-              {option}
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </Select>
@@ -117,18 +119,18 @@ export function SchemaField({ field, form, classNames, disabled }: SchemaFieldPr
         >
           {field.options?.map((option) => (
             <label
-              key={option}
-              htmlFor={`${id}-${option}`}
+              key={option.value}
+              htmlFor={`${id}-${option.value}`}
               className="flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-50"
             >
               <input
-                id={`${id}-${option}`}
+                id={`${id}-${option.value}`}
                 type="radio"
-                value={option}
+                value={option.value}
                 disabled={isDisabled}
                 {...form.register(field.name)}
               />
-              {option}
+              {option.label}
             </label>
           ))}
         </div>
@@ -164,6 +166,21 @@ export function SchemaField({ field, form, classNames, disabled }: SchemaFieldPr
         {control}
         {errorMessage}
       </fieldset>
+    );
+  }
+
+  if (field.type === "boolean") {
+    return (
+      <div className={cn("space-y-1", classNames?.field)}>
+        <div className="flex items-center gap-2">
+          {control}
+          <Label htmlFor={id} className={cn("text-sm font-medium", classNames?.label)}>
+            {labelContent}
+          </Label>
+        </div>
+        {description}
+        {errorMessage}
+      </div>
     );
   }
 

@@ -111,7 +111,15 @@ describe("buildFormValidationSchema", () => {
 
   it("validates required select against options", () => {
     const fields: FieldDefinition[] = [
-      { name: "role", type: "select", required: true, options: ["admin", "viewer"] },
+      {
+        name: "role",
+        type: "select",
+        required: true,
+        options: [
+          { label: "Admin", value: "admin" },
+          { label: "Viewer", value: "viewer" },
+        ],
+      },
     ];
     expect(parse(fields, { role: "" }).success).toBe(false);
     expect(parse(fields, { role: "admin" }).success).toBe(true);
@@ -120,7 +128,14 @@ describe("buildFormValidationSchema", () => {
 
   it("allows empty optional radio", () => {
     const fields: FieldDefinition[] = [
-      { name: "plan", type: "radio", options: ["free", "pro"] },
+      {
+        name: "plan",
+        type: "radio",
+        options: [
+          { label: "Free", value: "free" },
+          { label: "Pro", value: "pro" },
+        ],
+      },
     ];
     expect(parse(fields, { plan: "" }).success).toBe(true);
     expect(parse(fields, { plan: "pro" }).success).toBe(true);

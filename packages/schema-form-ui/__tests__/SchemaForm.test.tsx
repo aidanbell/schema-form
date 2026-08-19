@@ -83,4 +83,34 @@ describe("SchemaForm", () => {
     expect(screen.queryByLabelText(/email/i)).toBeNull();
     expect(screen.getByLabelText(/role/i)).toHaveProperty("disabled", true);
   });
+
+  it("should honor labels and hide reset when configured", async () => {
+    render(
+      <SchemaForm
+        config={{
+          schema: goldenSignup,
+          showReset: false,
+          submitLabel: "Create account",
+          classNames: { form: "demo-form", submitButton: "demo-submit" },
+        }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    expect(screen.queryByRole("button", { name: /reset/i })).toBeNull();
+    expect(screen.getByRole("button", { name: /create account/i })).toBeTruthy();
+  });
+
+  it("should reset field values", async () => {
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup, resetLabel: "Clear" }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    const email = screen.getByLabelText(/email/i);
+    await userEvent.type(email, "a@b.com");
+    expect(email).toHaveProperty("value", "a@b.com");
+    await userEvent.click(screen.getByRole("button", { name: /clear/i }));
+    expect(email).toHaveProperty("value", "");
+  });
 });

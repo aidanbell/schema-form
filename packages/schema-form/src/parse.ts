@@ -5,6 +5,7 @@ import type {
   FieldDefinition,
   FieldType,
   ParseFieldResult,
+  FieldOption,
 } from "./types.js";
 import { FIELD_TYPES, FIELD_NAME_PATTERN } from "./types.js";
 import { issue, formatParseError } from "./errors.js";
@@ -158,7 +159,7 @@ const parseField = (field: unknown, index: number): ParseFieldResult => {
     parsedDefaultValue = defaultValue;
   }
 
-  const parsedOptions: string[] = [];
+  const parsedOptions: FieldOption[] = [];
   if (type === "select" || type === "radio") {
     if (!options || !Array.isArray(options)) {
       issues.push(issue(`fields[${index}].options`, "Options must be an array"));
@@ -166,10 +167,34 @@ const parseField = (field: unknown, index: number): ParseFieldResult => {
       issues.push(issue(`fields[${index}].options`, "Options must have at least one value"));
     } else {
       for (const [optionIndex, option] of options.entries()) {
-        if (!isString(option)) {
-          issues.push(issue(`fields[${index}].options[${optionIndex}]`, "Option must be a string"));
+        if (isString(option)) {
+          if (option.length === 0) {
+            issues.push(
+              issue(`fields[${index}].options[${optionIndex}]`, "Option string must be non-empty"),
+            );
+          } else {
+            parsedOptions.push({ label: option, value: option });
+          }
+        } else if (isPlainObject(option)) {
+          const label = (option as { label?: unknown }).label;
+          const value = (option as { value?: unknown }).value;
+          if (!isString(label) || !isString(value) || label.length === 0 || value.length === 0) {
+            issues.push(
+              issue(
+                `fields[${index}].options[${optionIndex}]`,
+                "Option must be a string or an object with non-empty label and value",
+              ),
+            );
+          } else {
+            parsedOptions.push({ label, value });
+          }
         } else {
-          parsedOptions.push(option);
+          issues.push(
+            issue(
+              `fields[${index}].options[${optionIndex}]`,
+              "Option must be a string or an object with non-empty label and value",
+            ),
+          );
         }
       }
     }

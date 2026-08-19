@@ -102,7 +102,7 @@ function buildBooleanSchema(field: FieldDefinition) {
 }
 
 function buildSelectSchema(field: FieldDefinition) {
-  const picklist = v.picklist(field.options ?? []);
+  const picklist = v.picklist(field.options?.map((option) => option.value) ?? []);
 
   if (field.required) {
     return v.pipe(v.string(), v.nonEmpty("Required"), picklist);

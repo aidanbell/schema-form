@@ -30,7 +30,7 @@ export type FieldDefinition = {
   required?: boolean;
   placeholder?: string;
   defaultValue?: string | number | boolean;
-  options?: string[];
+  options?: FieldOption[];
   min?: number;
   max?: number;
   minLength?: number;
@@ -38,6 +38,9 @@ export type FieldDefinition = {
   pattern?: string;
   disabled?: boolean;
 };
+
+/** Normalized select/radio option. Parse accepts a plain string and expands it to `{ label, value }`. */
+export type FieldOption = { label: string; value: string };
 
 /**
  * Top-level form definition (`schemaVersion` defaults to `1`).

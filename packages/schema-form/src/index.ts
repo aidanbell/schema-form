@@ -11,6 +11,7 @@ export { useSchemaForm } from "./useSchemaForm.js";
 export type {
   FieldDefinition,
   FieldType,
+  FieldOption,
   FormDefinition,
   ParseIssue,
   ParseResult,
