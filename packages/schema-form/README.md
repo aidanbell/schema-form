@@ -12,7 +12,9 @@ Bring your own UI — this package does not render inputs.
 pnpm add @aidanbell/schema-form valibot react react-dom react-hook-form @hookform/resolvers
 ```
 
-**Peers:** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, `react-hook-form` ^7.50, `@hookform/resolvers` ≥3.
+**Peers:** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, `react-hook-form` ^7.50, `@hookform/resolvers` ≥5.0.1.
+
+Built validation schemas implement [Standard Schema v1](https://standardschema.dev), so `validationSchema` from `useSchemaForm` (or `buildFormValidationSchema`) can be passed to any Standard Schema-aware consumer — not just React Hook Form.
 
 ## Quickstart
 

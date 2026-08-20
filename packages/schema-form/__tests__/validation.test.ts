@@ -8,6 +8,20 @@ function parse(fields: FieldDefinition[], data: Record<string, unknown>) {
 }
 
 describe("buildFormValidationSchema", () => {
+  it("implements Standard Schema v1", async () => {
+    const schema = buildFormValidationSchema([
+      { name: "email", type: "email", required: true },
+    ]);
+    expect(schema["~standard"].version).toBe(1);
+    expect(schema["~standard"].vendor).toBe("valibot");
+
+    const ok = await schema["~standard"].validate({ email: "a@b.com" });
+    expect(ok.issues).toBeUndefined();
+
+    const bad = await schema["~standard"].validate({ email: "" });
+    expect(bad.issues?.length).toBeGreaterThan(0);
+  });
+
   it("accepts a valid email and number", () => {
     const result = parse(
       [

@@ -1,9 +1,20 @@
 import * as v from "valibot";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
 import type { FieldDefinition } from "./types.js";
 
-export type FormValidationSchema = v.GenericSchema;
+/**
+ * The built form-level validation schema. Implements
+ * [Standard Schema v1](https://standardschema.dev), so it can be passed to any
+ * Standard Schema-aware consumer (form resolvers, RPC layers, etc.).
+ * Valibot is the underlying implementation.
+ */
+export type FormValidationSchema = v.GenericSchema &
+  StandardSchemaV1<Record<string, unknown>, Record<string, unknown>>;
 
-function buildFieldSchema(field: FieldDefinition): FormValidationSchema {
+/** Internal: schema for a single field (output is the field value, not the form object). */
+type FieldSchema = v.GenericSchema;
+
+function buildFieldSchema(field: FieldDefinition): FieldSchema {
   switch (field.type) {
     case "string":
     case "password":
@@ -21,7 +32,7 @@ function buildFieldSchema(field: FieldDefinition): FormValidationSchema {
 }
 
 export function buildFormValidationSchema(fields: FieldDefinition[]): FormValidationSchema {
-  const shape: Record<string, FormValidationSchema> = {};
+  const shape: Record<string, FieldSchema> = {};
   for (const field of fields) {
     shape[field.name] = buildFieldSchema(field);
   }

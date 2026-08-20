@@ -4,7 +4,7 @@
 
 ## Current baseline (`0.1.x`)
 
-- **Validator:** [Valibot](https://valibot.dev) (peer). There is no Zod adapter yet.
+- **Validator:** [Valibot](https://valibot.dev) (peer) under the hood. Built schemas implement [Standard Schema v1](https://standardschema.dev), and form wiring uses `standardSchemaResolver` — so the validator is an implementation detail, and Standard Schema-aware tools can consume `validationSchema` directly. Requires `@hookform/resolvers` ≥5.0.1.
 - **Headless only:** parse, defaults, Valibot schema builder, and `useSchemaForm` (React Hook Form + `@hookform/resolvers/valibot`).
 - **Schema:** `schemaVersion: 1` — see [`SCHEMA.md`](SCHEMA.md).
 - **UI package:** `@aidanbell/schema-form-ui` ships styled `SchemaForm` (Tailwind utilities + Base UI checkbox). Consumers must configure Tailwind to scan the package `dist` — see the UI README.

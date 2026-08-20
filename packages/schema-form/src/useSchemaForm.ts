@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { valibotResolver } from "@hookform/resolvers/valibot";
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import { getDefaultValues } from "./defaults.js";
 import type { UseSchemaFormOptions, UseSchemaFormResult } from "./types.js";
 import { buildFormValidationSchema } from "./validation.js";
@@ -20,7 +20,7 @@ export function useSchemaForm(options: UseSchemaFormOptions): UseSchemaFormResul
   );
 
   const form = useForm<Record<string, unknown>>({
-    resolver: valibotResolver(validationSchema as never),
+    resolver: standardSchemaResolver(validationSchema),
     defaultValues: resolvedDefaults,
   });
 

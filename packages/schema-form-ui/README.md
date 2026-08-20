@@ -12,7 +12,7 @@ This package **does not ship a CSS file**. Your app must run Tailwind and scan t
 pnpm add @aidanbell/schema-form-ui @aidanbell/schema-form valibot react react-dom react-hook-form @hookform/resolvers
 ```
 
-**Peers:** `react` / `react-dom` ≥18.2, `@aidanbell/schema-form` ≥0.1.0, `valibot` ^1.4.2, `react-hook-form` ^7.50, `@hookform/resolvers` ≥3.
+**Peers:** `react` / `react-dom` ≥18.2, `@aidanbell/schema-form` ≥0.1.0, `valibot` ^1.4.2, `react-hook-form` ^7.50, `@hookform/resolvers` ≥5.0.1.
 
 Runtime dependencies (installed with the package): `clsx`, `tailwind-merge`, `@base-ui/react`.
 

@@ -4,7 +4,7 @@
 
 **Schema in → accessible React form out.**
 
-Pass a small JSON config (field list + rules). The library validates the schema, builds a Valibot validator, and either:
+Pass a small JSON config (field list + rules). The library validates the schema, builds a [Standard Schema](https://standardschema.dev)-compliant validator (Valibot under the hood), and either:
 
 - renders a polished Tailwind / Base UI form (`@aidanbell/schema-form-ui`), or
 - exposes headless hooks/utils so you bring your own components (`@aidanbell/schema-form`)
@@ -22,7 +22,7 @@ Pass a small JSON config (field list + rules). The library validates the schema,
 pnpm add @aidanbell/schema-form valibot react react-dom react-hook-form @hookform/resolvers
 ```
 
-**Peer dependencies (core):** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, plus `react-hook-form` and `@hookform/resolvers` for the headless hook.
+**Peer dependencies (core):** `react` / `react-dom` ≥18.2, `valibot` ^1.4.2, plus `react-hook-form` and `@hookform/resolvers` ≥5.0.1 for the headless hook.
 
 ## Install (UI)
 
