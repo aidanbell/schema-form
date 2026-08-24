@@ -2,6 +2,7 @@ import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, it, expect, vi } from "vitest";
 import { SchemaForm } from "../src/index.js";
+import type { FieldControlProps } from "../src/types.js";
 
 const goldenSignup = {
   schemaVersion: 1 as const,
@@ -12,11 +13,22 @@ const goldenSignup = {
       name: "role",
       type: "select" as const,
       label: "Role",
-      options: ["admin", "viewer"],
+      options: [
+        { label: "Admin", value: "admin" },
+        { label: "Viewer", value: "viewer" },
+      ],
     },
   ],
   description: "Sign up for a new account",
 };
+
+function FakeControl({ id }: FieldControlProps) {
+  return <input id={id} data-testid="fake-control" />;
+}
+
+function OtherFakeControl({ id }: FieldControlProps) {
+  return <input id={id} data-testid="other-fake-control" />;
+}
 
 afterEach(() => {
   cleanup();
@@ -102,15 +114,60 @@ describe("SchemaForm", () => {
 
   it("should reset field values", async () => {
     render(
-      <SchemaForm
-        config={{ schema: goldenSignup, resetLabel: "Clear" }}
-        onSubmit={vi.fn()}
-      />,
+      <SchemaForm config={{ schema: goldenSignup, resetLabel: "Clear" }} onSubmit={vi.fn()} />,
     );
     const email = screen.getByLabelText(/email/i);
     await userEvent.type(email, "a@b.com");
     expect(email).toHaveProperty("value", "a@b.com");
     await userEvent.click(screen.getByRole("button", { name: /clear/i }));
     expect(email).toHaveProperty("value", "");
+  });
+
+  it("renders a components-map override instead of a built-in", () => {
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup, components: { select: FakeControl } }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    expect(screen.getByTestId("fake-control")).toBeTruthy();
+    expect(screen.queryByRole("combobox")).toBeNull();
+    expect(screen.getByText(/^Role$/)).toBeTruthy();
+  });
+
+  it("per-field component wins over the components-map override", () => {
+    render(
+      <SchemaForm
+        config={{
+          schema: goldenSignup,
+          components: { select: FakeControl },
+          fields: { role: { component: OtherFakeControl } },
+        }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    expect(screen.queryByTestId("fake-control")).toBeNull();
+    expect(screen.getByTestId("other-fake-control")).toBeTruthy();
+  });
+
+  it("delivers error and aria props to custom controls", async () => {
+    const seen: Array<FieldControlProps> = [];
+    function SpyControl(props: FieldControlProps) {
+      seen.push(props);
+      return <input id={props.id} />;
+    }
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup, components: { email: SpyControl } }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: /submit/i }));
+    await waitFor(() => {
+      const last = seen.at(-1);
+      expect(last?.["aria-invalid"]).toBe(true);
+      expect(last?.error?.message).toBe("Required");
+      expect(last?.["aria-describedby"]).toContain("email-error");
+    });
   });
 });

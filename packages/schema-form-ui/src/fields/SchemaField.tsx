@@ -1,6 +1,6 @@
 import type { FieldDefinition, FieldType } from "@aidanbell/schema-form";
 import type { UseFormReturn } from "react-hook-form";
-import type { FieldControlProps, SchemaFormClassNames } from "../types.js";
+import type { FieldControlProps, SchemaFormClassNames, SchemaFormConfig } from "../types.js";
 import { cn } from "../classNames.js";
 import type { ComponentType } from "react";
 import {
@@ -18,6 +18,8 @@ type SchemaFieldProps = {
   form: UseFormReturn<Record<string, unknown>>;
   classNames?: SchemaFormClassNames;
   disabled?: boolean;
+  components?: SchemaFormConfig["components"];
+  component?: ComponentType<FieldControlProps>;
 };
 
 const builtInControls: Record<FieldType, ComponentType<FieldControlProps>> = {
@@ -31,11 +33,22 @@ const builtInControls: Record<FieldType, ComponentType<FieldControlProps>> = {
   radio: RadioControl,
 };
 
-function resolveControl(type: FieldType) {
-  return builtInControls[type] ?? (() => null);
+function resolveControl(
+  type: FieldType,
+  component?: ComponentType<FieldControlProps>,
+  components?: SchemaFormConfig["components"],
+) {
+  return component ?? components?.[type] ?? builtInControls[type] ?? (() => null);
 }
 
-export function SchemaField({ field, form, classNames, disabled }: SchemaFieldProps) {
+export function SchemaField({
+  field,
+  form,
+  classNames,
+  disabled,
+  components,
+  component,
+}: SchemaFieldProps) {
   const id = field.name;
   const error = form.formState.errors[field.name];
   const isDisabled = disabled || field.disabled;
@@ -45,7 +58,7 @@ export function SchemaField({ field, form, classNames, disabled }: SchemaFieldPr
     [field.description ? descId : null, error ? errorId : null].filter(Boolean).join(" ") ||
     undefined;
 
-  const Control = resolveControl(field.type);
+  const Control = resolveControl(field.type, component, components);
   const control = (
     <Control
       field={field}

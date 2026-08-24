@@ -73,6 +73,8 @@ function SchemaFormFields({ definition, config, onSubmit, onError }: SchemaFormF
             form={form}
             disabled={override?.disabled}
             classNames={mergeClassNames(config.classNames, override?.classNames)}
+            components={config.components}
+            component={override?.component}
           />
         );
       })}
