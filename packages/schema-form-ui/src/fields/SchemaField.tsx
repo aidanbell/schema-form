@@ -1,9 +1,17 @@
-import type { FieldDefinition } from "@aidanbell/schema-form";
+import type { FieldDefinition, FieldType } from "@aidanbell/schema-form";
 import type { UseFormReturn } from "react-hook-form";
-import { Controller } from "react-hook-form";
-import type { SchemaFormClassNames } from "../types";
+import type { FieldControlProps, SchemaFormClassNames } from "../types.js";
 import { cn } from "../classNames.js";
-import { Checkbox, Input, Select, Textarea, Label } from "../ui/index.js";
+import type { ComponentType } from "react";
+import {
+  BooleanControl,
+  NumberControl,
+  RadioControl,
+  SelectControl,
+  StringControl,
+  TextareaControl,
+} from "./controls";
+import { Label } from "../ui/index.js";
 
 type SchemaFieldProps = {
   field: FieldDefinition;
@@ -11,6 +19,21 @@ type SchemaFieldProps = {
   classNames?: SchemaFormClassNames;
   disabled?: boolean;
 };
+
+const builtInControls: Record<FieldType, ComponentType<FieldControlProps>> = {
+  string: StringControl,
+  email: StringControl,
+  password: StringControl,
+  number: NumberControl,
+  boolean: BooleanControl,
+  textarea: TextareaControl,
+  select: SelectControl,
+  radio: RadioControl,
+};
+
+function resolveControl(type: FieldType) {
+  return builtInControls[type] ?? (() => null);
+}
 
 export function SchemaField({ field, form, classNames, disabled }: SchemaFieldProps) {
   const id = field.name;
@@ -22,121 +45,19 @@ export function SchemaField({ field, form, classNames, disabled }: SchemaFieldPr
     [field.description ? descId : null, error ? errorId : null].filter(Boolean).join(" ") ||
     undefined;
 
-  let control: React.ReactNode;
-  switch (field.type) {
-    case "string":
-    case "email":
-    case "password":
-      control = (
-        <Input
-          id={id}
-          type={field.type === "string" ? "text" : field.type}
-          placeholder={field.placeholder}
-          disabled={isDisabled}
-          className={cn(classNames?.control)}
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          {...form.register(field.name)}
-        />
-      );
-      break;
-    case "number":
-      control = (
-        <Input
-          id={id}
-          type="number"
-          placeholder={field.placeholder}
-          disabled={isDisabled}
-          className={cn(classNames?.control)}
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          {...form.register(field.name, {
-            setValueAs: (val) => (val === "" || val === null ? undefined : Number(val)),
-          })}
-        />
-      );
-      break;
-    case "boolean":
-      control = (
-        <Controller
-          name={field.name}
-          control={form.control}
-          render={({ field: rhf }) => (
-            <Checkbox
-              id={id}
-              checked={Boolean(rhf.value)}
-              onCheckedChange={rhf.onChange}
-              disabled={isDisabled}
-              className={cn(classNames?.control)}
-              aria-invalid={!!error}
-              aria-describedby={describedBy}
-            />
-          )}
-        />
-      );
-      break;
-    case "textarea":
-      control = (
-        <Textarea
-          id={id}
-          placeholder={field.placeholder}
-          disabled={isDisabled}
-          className={cn(classNames?.control)}
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          {...form.register(field.name)}
-        />
-      );
-      break;
-    case "select":
-      control = (
-        <Select
-          id={id}
-          disabled={isDisabled}
-          className={cn(classNames?.control)}
-          aria-invalid={!!error}
-          aria-describedby={describedBy}
-          {...form.register(field.name)}
-        >
-          <option value="" disabled hidden>
-            {field.placeholder ?? "Select..."}
-          </option>
-          {field.options?.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select>
-      );
-      break;
-    case "radio":
-      control = (
-        <div
-          className={cn("flex flex-wrap items-center gap-3", classNames?.control)}
-          role="radiogroup"
-          aria-describedby={describedBy}
-          aria-invalid={!!error}
-        >
-          {field.options?.map((option) => (
-            <label
-              key={option.value}
-              htmlFor={`${id}-${option.value}`}
-              className="flex items-center gap-2 text-sm text-zinc-900 dark:text-zinc-50"
-            >
-              <input
-                id={`${id}-${option.value}`}
-                type="radio"
-                value={option.value}
-                disabled={isDisabled}
-                {...form.register(field.name)}
-              />
-              {option.label}
-            </label>
-          ))}
-        </div>
-      );
-      break;
-  }
+  const Control = resolveControl(field.type);
+  const control = (
+    <Control
+      field={field}
+      form={form}
+      error={error}
+      id={id}
+      disabled={isDisabled}
+      aria-invalid={!!error}
+      aria-describedby={describedBy}
+      className={cn(classNames?.control)}
+    />
+  );
 
   const labelContent = (
     <>
