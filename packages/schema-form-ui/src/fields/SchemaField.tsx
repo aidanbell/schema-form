@@ -1,5 +1,4 @@
-import type { FieldDefinition, FieldType } from "@aidanbell/schema-form";
-import type { UseFormReturn } from "react-hook-form";
+import type { FieldType } from "@aidanbell/schema-form";
 import type { FieldControlProps, SchemaFormClassNames, SchemaFormConfig } from "../types.js";
 import { cn } from "../classNames.js";
 import type { ComponentType } from "react";
@@ -13,11 +12,8 @@ import {
 } from "./controls";
 import { Label } from "../ui/index.js";
 
-type SchemaFieldProps = {
-  field: FieldDefinition;
-  form: UseFormReturn<Record<string, unknown>>;
+type SchemaFieldProps = FieldControlProps & {
   classNames?: SchemaFormClassNames;
-  disabled?: boolean;
   components?: SchemaFormConfig["components"];
   component?: ComponentType<FieldControlProps>;
 };
@@ -41,36 +37,15 @@ function resolveControl(
   return component ?? components?.[type] ?? builtInControls[type] ?? (() => null);
 }
 
-export function SchemaField({
-  field,
-  form,
-  classNames,
-  disabled,
-  components,
-  component,
-}: SchemaFieldProps) {
-  const id = field.name;
-  const error = form.formState.errors[field.name];
-  const isDisabled = disabled || field.disabled;
+export function SchemaField(props: SchemaFieldProps) {
+  const { classNames, components, component, ...controlProps } = props;
+  const { field, id, error } = controlProps;
+
   const errorId = `${id}-error`;
   const descId = `${id}-description`;
-  const describedBy =
-    [field.description ? descId : null, error ? errorId : null].filter(Boolean).join(" ") ||
-    undefined;
 
   const Control = resolveControl(field.type, component, components);
-  const control = (
-    <Control
-      field={field}
-      form={form}
-      error={error}
-      id={id}
-      disabled={isDisabled}
-      aria-invalid={!!error}
-      aria-describedby={describedBy}
-      className={cn(classNames?.control)}
-    />
-  );
+  const control = <Control {...controlProps} />;
 
   const labelContent = (
     <>

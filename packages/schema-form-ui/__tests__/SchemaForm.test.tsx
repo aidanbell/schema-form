@@ -133,6 +133,7 @@ describe("SchemaForm", () => {
     expect(screen.getByTestId("fake-control")).toBeTruthy();
     expect(screen.queryByRole("combobox")).toBeNull();
     expect(screen.getByText(/^Role$/)).toBeTruthy();
+    expect(screen.getByLabelText(/email/i)).toBeTruthy();
   });
 
   it("per-field component wins over the components-map override", () => {
@@ -169,5 +170,79 @@ describe("SchemaForm", () => {
       expect(last?.error?.message).toBe("Required");
       expect(last?.["aria-describedby"]).toContain("email-error");
     });
+  });
+
+  it("renderField passthrough keeps default behavior intact", async () => {
+    const onSubmit = vi.fn();
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup }}
+        renderField={(props, defaultRender) => defaultRender(props)}
+        onSubmit={onSubmit}
+      />,
+    );
+    expect(screen.getByLabelText(/email/i)).toBeTruthy();
+    expect(screen.getByLabelText(/role/i)).toBeTruthy();
+    await userEvent.type(screen.getByLabelText(/email/i), "a@b.com");
+    await userEvent.selectOptions(screen.getByLabelText(/role/i), "admin");
+    await userEvent.click(screen.getByRole("button", { name: /submit/i }));
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({ email: "a@b.com", role: "admin" }),
+      );
+    });
+  });
+
+  it("renderField replaces a single field row and delegates the rest", () => {
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup }}
+        renderField={(props, defaultRender) =>
+          props.field.name === "role" ? (
+            <div data-testid="custom-row">custom role row</div>
+          ) : (
+            defaultRender(props)
+          )
+        }
+        onSubmit={vi.fn()}
+      />,
+    );
+    expect(screen.getByTestId("custom-row")).toBeTruthy();
+    expect(screen.queryByRole("combobox")).toBeNull();
+    expect(screen.queryByText(/^Role$/)).toBeNull();
+    expect(screen.getByLabelText(/email/i)).toBeTruthy();
+  });
+
+  it("delivers error and aria props to renderField after invalid submit", async () => {
+    const seen: Array<FieldControlProps> = [];
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup }}
+        renderField={(props, defaultRender) => {
+          if (props.field.name === "email") seen.push(props);
+          return defaultRender(props);
+        }}
+        onSubmit={vi.fn()}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: /submit/i }));
+    await waitFor(() => {
+      const last = seen.at(-1);
+      expect(last?.["aria-invalid"]).toBe(true);
+      expect(last?.error?.message).toBe("Required");
+      expect(last?.["aria-describedby"]).toContain("email-error");
+    });
+  });
+
+  it("defaultRender honors props tweaked by renderField", () => {
+    render(
+      <SchemaForm
+        config={{ schema: goldenSignup }}
+        renderField={(props, defaultRender) => defaultRender({ ...props, disabled: true })}
+        onSubmit={vi.fn()}
+      />,
+    );
+    expect(screen.getByLabelText(/email/i)).toHaveProperty("disabled", true);
+    expect(screen.getByLabelText(/role/i)).toHaveProperty("disabled", true);
   });
 });

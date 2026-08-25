@@ -1,11 +1,43 @@
 import { parseFormDefinition, useSchemaForm } from "@aidanbell/schema-form";
-import type { SchemaFormProps, SchemaFormFieldsProps } from "./types.js";
-import { useEffect, useMemo } from "react";
+import type { FieldDefinition } from "@aidanbell/schema-form";
+import type {
+  FieldControlProps,
+  SchemaFormProps,
+  SchemaFormFieldsProps,
+  SchemaFormConfig,
+} from "./types.js";
+import { Fragment, useEffect, useMemo } from "react";
+import type { UseFormReturn } from "react-hook-form";
 import { cn, mergeClassNames } from "./classNames.js";
 import { SchemaField } from "./fields/SchemaField.js";
 import { Button } from "./ui/Button.js";
 
-export function SchemaForm({ config, onSubmit, onError }: SchemaFormProps) {
+function buildFieldControlProps(
+  field: FieldDefinition,
+  form: UseFormReturn<Record<string, unknown>>,
+  config: SchemaFormConfig,
+  override?: NonNullable<SchemaFormConfig["fields"]>[string],
+): FieldControlProps {
+  const error = form.formState.errors[field.name];
+  const disabled = override?.disabled || field.disabled;
+  const describedBy =
+    [field.description ? `${field.name}-description` : null, error ? `${field.name}-error` : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
+  const className = cn(config.classNames?.control, override?.classNames?.control);
+  return {
+    field,
+    form,
+    error,
+    id: field.name,
+    disabled,
+    "aria-invalid": !!error,
+    "aria-describedby": describedBy,
+    className,
+  };
+}
+
+export function SchemaForm({ config, onSubmit, onError, renderField }: SchemaFormProps) {
   const parsed = useMemo(() => parseFormDefinition(config.schema), [config.schema]);
 
   useEffect(() => {
@@ -38,11 +70,18 @@ export function SchemaForm({ config, onSubmit, onError }: SchemaFormProps) {
       config={config}
       onSubmit={onSubmit}
       onError={onError}
+      renderField={renderField}
     />
   );
 }
 
-function SchemaFormFields({ definition, config, onSubmit, onError }: SchemaFormFieldsProps) {
+function SchemaFormFields({
+  definition,
+  config,
+  onSubmit,
+  onError,
+  renderField,
+}: SchemaFormFieldsProps) {
   const { fields, form, handleSubmit } = useSchemaForm({
     definition,
     defaultValues: config.defaultValues,
@@ -66,18 +105,25 @@ function SchemaFormFields({ definition, config, onSubmit, onError }: SchemaFormF
       {fields.map((field) => {
         const override = config.fields?.[field.name];
         if (override?.hidden) return null;
-        return (
+
+        const props = buildFieldControlProps(field, form, config, override);
+
+        const defaultRender = (props: FieldControlProps) => (
           <SchemaField
-            key={field.name}
-            field={field}
-            form={form}
-            disabled={override?.disabled}
+            {...props}
             classNames={mergeClassNames(config.classNames, override?.classNames)}
             components={config.components}
             component={override?.component}
           />
         );
+
+        return (
+          <Fragment key={field.name}>
+            {renderField ? renderField(props, defaultRender) : defaultRender(props)}
+          </Fragment>
+        );
       })}
+
       <div className={cn("flex justify-end gap-2", config.classNames?.actions)}>
         {(config.showReset ?? true) && (
           <Button
