@@ -10,7 +10,24 @@ function Form({ field, disabled }: { field: FieldDefinition; disabled?: boolean 
       [field.name]: field.type === "boolean" ? false : "",
     },
   });
-  return <SchemaField field={field} form={form} disabled={disabled} />;
+  // Mirrors buildFieldControlProps in SchemaForm: derive the control props
+  // the same way the real form does.
+  const error = form.formState.errors[field.name];
+  const describedBy =
+    [field.description ? `${field.name}-description` : null, error ? `${field.name}-error` : null]
+      .filter(Boolean)
+      .join(" ") || undefined;
+  return (
+    <SchemaField
+      field={field}
+      form={form}
+      error={error}
+      id={field.name}
+      disabled={disabled || field.disabled}
+      aria-invalid={!!error}
+      aria-describedby={describedBy}
+    />
+  );
 }
 
 afterEach(() => {

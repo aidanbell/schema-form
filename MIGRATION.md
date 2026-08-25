@@ -7,15 +7,14 @@
 - **Validator:** [Valibot](https://valibot.dev) (peer) under the hood. Built schemas implement [Standard Schema v1](https://standardschema.dev), and form wiring uses `standardSchemaResolver` — so the validator is an implementation detail, and Standard Schema-aware tools can consume `validationSchema` directly. Requires `@hookform/resolvers` ≥5.0.1.
 - **Headless only:** parse, defaults, Valibot schema builder, and `useSchemaForm` (React Hook Form + `@hookform/resolvers/valibot`).
 - **Schema:** `schemaVersion: 1` — see [`SCHEMA.md`](SCHEMA.md).
-- **UI package:** `@aidanbell/schema-form-ui` ships styled `SchemaForm` (Tailwind utilities + Base UI checkbox). Consumers must configure Tailwind to scan the package `dist` — see the UI README.
+- **UI package:** `@aidanbell/schema-form-ui` ships styled `SchemaForm` (Tailwind utilities + Base UI checkbox). Consumers must configure Tailwind to scan the package `dist` — see the UI README. Rendering is extensible via `config.components`, per-field `component`, and `renderField` — see [Customizing rendering](packages/schema-form-ui/README.md#customizing-rendering).
 - **Select / radio options (0.1.1+):** accept `string` or `{ label, value }`. After parse, options are always `{ label, value }` (a string `"admin"` becomes `{ label: "admin", value: "admin" }`).
 
 ## Future (placeholders)
 
 Expect possible breaking changes around:
 
-- Optional Zod (or other) validation adapters beside Valibot
-- `components` / slots map and richer classNames theming
+- Optional Zod (or other) validation adapters beside Valibot (input side — output already implements Standard Schema v1)
 - `schemaVersion: 2` field/form shape extensions
 - Stricter TypeScript generics for form values
 

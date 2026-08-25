@@ -59,4 +59,5 @@ export type SchemaFormFieldsProps = {
   config: SchemaFormConfig;
   onSubmit: SchemaFormProps["onSubmit"];
   onError?: SchemaFormProps["onError"];
+  renderField?: SchemaFormProps["renderField"];
 };
