@@ -54,7 +54,10 @@ const schema = {
       name: "role",
       type: "select" as const,
       label: "Role",
-      options: ["admin", "viewer"],
+      options: [
+        { label: "Admin", value: "admin" },
+        { label: "Viewer", value: "viewer" },
+      ],
     },
   ],
 };
@@ -102,7 +105,98 @@ Pass Tailwind classes via `config.classNames` (form-wide) and/or `config.fields[
 />
 ```
 
-**Field overrides:** `hidden`, `disabled`, and nested `classNames` keys (`field`, `label`, `description`, `control`, `error`, …).
+**Field overrides:** `hidden`, `disabled`, `component`, and nested `classNames` keys (`field`, `label`, `description`, `control`, `error`, …).
+
+## Customizing rendering
+
+Three layers, pick the smallest one that fits. Each layer can coexist with the others; more specific wins.
+
+### 1. Replace a control type everywhere — `config.components`
+
+Swap the input for a given `FieldType` across the form. Label, description, and error chrome stay put.
+
+```tsx
+import { SchemaForm, type FieldControlProps } from "@aidanbell/schema-form-ui";
+
+function FancySelect({
+  field,
+  form,
+  id,
+  disabled,
+  className,
+  "aria-invalid": ariaInvalid,
+  "aria-describedby": ariaDescribedBy,
+}: FieldControlProps) {
+  return (
+    <select
+      id={id}
+      disabled={disabled}
+      className={className}
+      aria-invalid={ariaInvalid}
+      aria-describedby={ariaDescribedBy}
+      {...form.register(field.name)}
+    >
+      {(field.options ?? []).map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+<SchemaForm
+  config={{ schema, components: { select: FancySelect } }}
+  onSubmit={...}
+/>
+```
+
+### 2. Replace one field's control — `config.fields[name].component`
+
+Same chrome, one field. Wins over a matching `components` entry.
+
+```tsx
+<SchemaForm
+  config={{
+    schema,
+    components: { string: FancyInput },
+    fields: { nickname: { component: NicknameControl } },
+  }}
+  onSubmit={...}
+/>
+```
+
+### 3. Own the whole row — `renderField`
+
+A render prop on `SchemaForm` (not `config`). Receives the same `FieldControlProps` as custom controls, plus `defaultRender` to fall back per field.
+
+```tsx
+<SchemaForm
+  config={{ schema }}
+  renderField={(props, defaultRender) =>
+    props.field.name === "rating" ? (
+      <StarRatingRow {...props} />
+    ) : (
+      defaultRender(props)
+    )
+  }
+  onSubmit={...}
+/>
+```
+
+`defaultRender(props)` is equivalent to not using `renderField` at all. You can tweak props before delegating:
+
+```tsx
+renderField={(props, defaultRender) => defaultRender({ ...props, disabled: true })}
+```
+
+`hidden` still removes a field before `renderField` is consulted.
+
+### Custom control contract
+
+Custom controls receive `FieldControlProps`: `field`, `form`, `id`, `disabled`, `error`, `className`, `aria-invalid`, and `aria-describedby`. You must wire the value into React Hook Form yourself — `form.register(field.name)` for native inputs, or `Controller` when the widget is uncontrolled. The built-in implementations in [`controls.tsx`](src/fields/controls.tsx) are the reference.
+
+If `renderField` returns custom markup *without* calling `defaultRender`, you own the label, error display, and accessibility wiring. `aria-describedby` points at `{field.name}-error` and `{field.name}-description`; those ids only exist if you render elements with them.
 
 ## API
 
@@ -110,10 +204,11 @@ Pass Tailwind classes via `config.classNames` (form-wide) and/or `config.fields[
 |--------|------|
 | `SchemaForm` | Parse schema → render fields + submit/reset |
 | `SchemaField` | Single field bound to a React Hook Form instance |
+| Built-in controls | `StringControl`, `NumberControl`, `BooleanControl`, `TextareaControl`, `SelectControl`, `RadioControl` |
 | `cn` / `mergeClassNames` | Tailwind-friendly class helpers |
 | UI primitives | `Input`, `Textarea`, `Select`, `Checkbox`, `Label`, `Button` |
 
-**Types:** `SchemaFormProps`, `SchemaFormConfig`, `SchemaFormClassNames`.
+**Types:** `SchemaFormProps`, `SchemaFormConfig`, `SchemaFormClassNames`, `FieldControlProps`.
 
 Full field contract: [`SCHEMA.md`](../../SCHEMA.md) in the monorepo.
 

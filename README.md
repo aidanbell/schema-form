@@ -32,6 +32,8 @@ pnpm add @aidanbell/schema-form-ui @aidanbell/schema-form valibot react react-do
 
 Your app must run **Tailwind** and scan the UI package’s `dist` (v4 `@source` or v3 `content`). See the UI README for the exact snippets.
 
+The UI package is themable (`classNames`) and extensible: swap a control type with `config.components`, one field with `config.fields[name].component`, or the whole row with `renderField`. See [Customizing rendering](packages/schema-form-ui/README.md#customizing-rendering) in the UI README.
+
 Package docs:
 
 - [`packages/schema-form/README.md`](packages/schema-form/README.md)

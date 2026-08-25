@@ -1,5 +1,5 @@
 import type { FormDefinition, FieldDefinition, FieldType } from "@aidanbell/schema-form";
-import type { UseFormReturn, FieldError } from "react-hook-form";
+import type { UseFormReturn, FieldErrors } from "react-hook-form";
 import type { ComponentType, ReactNode } from "react";
 
 export type SchemaFormClassNames = {
@@ -19,7 +19,7 @@ export type FieldControlProps = {
   form: UseFormReturn<Record<string, unknown>>;
   id: string;
   disabled?: boolean;
-  error?: FieldError;
+  error?: FieldErrors<Record<string, unknown>>[string];
   "aria-invalid": boolean;
   "aria-describedby"?: string;
   className?: string;
@@ -46,7 +46,7 @@ export type SchemaFormConfig = {
 
 export type SchemaFormProps = {
   config: SchemaFormConfig;
-  renderField: (
+  renderField?: (
     props: FieldControlProps,
     defaultRender: (props: FieldControlProps) => ReactNode,
   ) => ReactNode;
@@ -59,4 +59,5 @@ export type SchemaFormFieldsProps = {
   config: SchemaFormConfig;
   onSubmit: SchemaFormProps["onSubmit"];
   onError?: SchemaFormProps["onError"];
+  renderField?: SchemaFormProps["renderField"];
 };
